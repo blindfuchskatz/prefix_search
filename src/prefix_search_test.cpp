@@ -1,54 +1,13 @@
+#include "PrefixSearch.h"
+#include "PrefixSearchAlgorithm.h"
+#include "algorithm/PsSimpleSingleThreaded.h"
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <string>
-#include <vector>
 
 using namespace testing;
 using namespace std;
-
-using WordList = std::vector<std::string>;
-
-class PrefixSearchAlgorithm
-{
-public:
-    virtual ~PrefixSearchAlgorithm() = default;
-    virtual WordList search(const WordList &wordList,
-                            std::string_view prefix) = 0;
-};
-
-class PsSimpleSingleThreaded : public PrefixSearchAlgorithm
-{
-public:
-    ~PsSimpleSingleThreaded() override = default;
-
-    WordList search(const WordList &wordList, std::string_view prefix) override
-    {
-        WordList findings;
-        for (const auto &word : wordList) {
-            if (word.starts_with(prefix)) {
-                findings.emplace_back(word);
-            }
-        }
-
-        std::ranges::sort(findings);
-        return findings;
-    }
-};
-
-class PrefixSearch
-{
-public:
-    explicit PrefixSearch(std::unique_ptr<PrefixSearchAlgorithm> algo)
-        : _algo(std::move(algo)){};
-
-    WordList search(const WordList &wordList, std::string_view prefix) const
-    {
-        return _algo->search(wordList, prefix);
-    }
-
-private:
-    std::unique_ptr<PrefixSearchAlgorithm> _algo;
-};
+using namespace algo;
 
 class APrefixSearch : public Test
 {
@@ -62,7 +21,7 @@ protected:
 
 TEST_F(APrefixSearch, returnsWordWhichMatchPrefixOfAOneWordList)
 {
-    auto ps = PrefixSearch(std::make_unique<PsSimpleSingleThreaded>());
+    auto ps = PrefixSearch(std::make_unique<algo::PsSimpleSingleThreaded>());
 
     ASSERT_WL_EQ({}, ps.search({}, "ab"));
     ASSERT_WL_EQ({"ab"}, ps.search({"ab"}, "ab"));

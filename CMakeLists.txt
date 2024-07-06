@@ -3,8 +3,8 @@ project(my_project)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wpedantic")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -I${CMAKE_SOURCE_DIR}/src")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wpedantic -I${CMAKE_SOURCE_DIR}/src")
 
 include(FetchContent)
 
@@ -27,6 +27,8 @@ enable_testing()
 add_executable(
   prefix_search_test
   src/prefix_search_test.cpp
+  src/PrefixSearch.cpp
+  src/algorithm/PsSimpleSingleThreaded.cpp
 )
 target_link_libraries(
   prefix_search_test
