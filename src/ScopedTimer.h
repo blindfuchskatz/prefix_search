@@ -23,8 +23,8 @@ public:
         using namespace std::chrono;
         auto stop = ClockType::now();
         auto duration = (stop - _start);
-        auto ms = duration_cast<microseconds>(duration).count();
-        std::cout << ms << " ms " << _function_name << std::endl;
+        auto µs = duration_cast<microseconds>(duration).count();
+        std::cout << µs << " µs " << _function_name << std::endl;
     }
 
 private:

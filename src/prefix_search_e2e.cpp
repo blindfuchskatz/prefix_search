@@ -1,4 +1,6 @@
 #include "ScopedTimer.h"
+#include "algorithm/BinarySearch.h"
+#include "algorithm/ChatGptPrefixSearch.h"
 #include "algorithm/PrefixSearchAsync.h"
 #include "algorithm/PsSimpleSingleThreaded.h"
 #include "helper.h"
@@ -14,9 +16,7 @@ int main()
     size_t cores = std::thread::hardware_concurrency();
 
     std::cout << std::endl << "\033[1;32m";
-    std::cout << "Running prefix search with " << cores << " cores"
-              << std::endl;
-
+    std::cout << "Running prefix search on " << cores << " cores" << std::endl;
     std::cout << "\033[0m";
 
     std::vector<std::unique_ptr<PrefixSearchAlgorithm>> algoList;
@@ -25,11 +25,12 @@ int main()
     algoList.emplace_back(std::make_unique<PrefixSearchAsync>(
         std::make_unique<PsSimpleSingleThreaded>(), cores));
 
+    algoList.emplace_back(std::make_unique<BinarySearch>());
+    algoList.emplace_back(std::make_unique<ChatGptPrefixSearch>());
+
     auto wl = generateSampleWordList();
 
     printFirstAndLastNElements(wl, 5);
-
-    shuffleWordList(wl);
 
     printFirstAndLastNElements(wl, 5);
 

@@ -32,6 +32,8 @@ add_executable(
   src/algorithm/PsSimpleSingleThreaded.cpp
   src/algorithm/PrefixSearchAsync.cpp
   src/algorithm/PrefixSearchAsync_utest.cpp
+  src/algorithm/BinarySearch.cpp
+  src/algorithm/ChatGptPrefixSearch.cpp
 )
 target_link_libraries(
   prefix_search_utest
@@ -50,6 +52,8 @@ add_executable(
   src/WordListSlicer.cpp
   src/algorithm/PsSimpleSingleThreaded.cpp
   src/algorithm/PrefixSearchAsync.cpp
+  src/algorithm/BinarySearch.cpp
+  src/algorithm/ChatGptPrefixSearch.cpp
 )
 
 target_link_libraries(
@@ -64,5 +68,7 @@ add_executable(
   src/WordListSlicer.cpp
   src/algorithm/PsSimpleSingleThreaded.cpp
   src/algorithm/PrefixSearchAsync.cpp
+  src/algorithm/BinarySearch.cpp
+  src/algorithm/ChatGptPrefixSearch.cpp
 )
 
