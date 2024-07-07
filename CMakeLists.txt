@@ -28,9 +28,9 @@ add_executable(
   prefix_search_utest
   src/prefix_search_utest.cpp
   src/WordListSlicer_utest.cpp
-  src/PrefixSearch.cpp
   src/WordListSlicer.cpp
   src/algorithm/PsSimpleSingleThreaded.cpp
+  src/algorithm/PrefixSearchAsync.cpp
   src/algorithm/PrefixSearchAsync_utest.cpp
 )
 target_link_libraries(
@@ -46,9 +46,10 @@ gtest_discover_tests(prefix_search_utest)
 add_executable(
   prefix_search_bm
   src/prefix_search_bm.cpp
-  src/PrefixSearch.cpp
   src/helper.cpp
+  src/WordListSlicer.cpp
   src/algorithm/PsSimpleSingleThreaded.cpp
+  src/algorithm/PrefixSearchAsync.cpp
 )
 
 target_link_libraries(
@@ -59,8 +60,9 @@ target_link_libraries(
 add_executable(
   prefix_search_e2e
   src/prefix_search_e2e.cpp
-  src/PrefixSearch.cpp
   src/helper.cpp
+  src/WordListSlicer.cpp
   src/algorithm/PsSimpleSingleThreaded.cpp
+  src/algorithm/PrefixSearchAsync.cpp
 )
 

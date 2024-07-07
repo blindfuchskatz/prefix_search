@@ -1,5 +1,5 @@
-#include "PrefixSearch.h"
 #include "PrefixSearchAlgorithm.h"
+#include "algorithm/PrefixSearchAsync.h"
 #include "algorithm/PsSimpleSingleThreaded.h"
 
 #include <gmock/gmock.h>
@@ -12,32 +12,43 @@ using namespace algo;
 class APrefixSearch : public Test
 {
 protected:
+    void SetUp() override
+    {
+        _algoList.clear();
+        _algoList.emplace_back(std::make_unique<PsSimpleSingleThreaded>());
+        _algoList.emplace_back(std::make_unique<PrefixSearchAsync>(
+            std::make_unique<PsSimpleSingleThreaded>(), 16));
+    }
     void ASSERT_WL_EQ(const WordList &expected, const WordList &actual) const
     {
         ASSERT_EQ(expected.size(), actual.size());
         ASSERT_THAT(expected, actual);
     }
+
+    std::vector<std::unique_ptr<PrefixSearchAlgorithm>> _algoList;
 };
 
 TEST_F(APrefixSearch, returnsWordWhichMatchPrefixOfAOneWordList)
 {
-    auto ps = PrefixSearch(std::make_unique<algo::PsSimpleSingleThreaded>());
 
-    ASSERT_WL_EQ({}, ps.search({}, "ab"));
-    ASSERT_WL_EQ({"ab"}, ps.search({"ab"}, "ab"));
-    ASSERT_WL_EQ({}, ps.search({"ab"}, "bc"));
-    ASSERT_WL_EQ({}, ps.search({"abc"}, "bc"));
-    ASSERT_WL_EQ({"abc"}, ps.search({"abc"}, "ab"));
+    for (const auto &a : _algoList) {
+        ASSERT_WL_EQ({}, a->search({}, "ab"));
+        ASSERT_WL_EQ({"ab"}, a->search({"ab"}, "ab"));
+        ASSERT_WL_EQ({}, a->search({"ab"}, "bc"));
+        ASSERT_WL_EQ({}, a->search({"abc"}, "bc"));
+        ASSERT_WL_EQ({"abc"}, a->search({"abc"}, "ab"));
+    }
 }
 
 TEST_F(APrefixSearch, returnsAllMatchingPrefixes)
 {
-    auto ps = PrefixSearch(std::make_unique<PsSimpleSingleThreaded>());
 
     WordList wl = {"aaaa", "aaab", "aaac", "aaad", "aaae", "aaaf", "xxag",
                    "aaah", "aaai", "aaaj", "aaak", "aaal", "aaam", "xxau",
                    "aaao", "aaap", "aaaq", "aaar", "aaas", "aaat", "xxan",
                    "aaav", "aaaw", "aaax", "aaay", "aaaz"};
 
-    ASSERT_WL_EQ({"xxag", "xxan", "xxau"}, ps.search(wl, "xx"));
+    for (const auto &a : _algoList) {
+        ASSERT_WL_EQ({"xxag", "xxan", "xxau"}, a->search(wl, "xx"));
+    }
 }

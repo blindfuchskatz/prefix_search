@@ -28,4 +28,9 @@ std::unique_ptr<PrefixSearchAlgorithm> PsSimpleSingleThreaded::clone() const
     return std::make_unique<PsSimpleSingleThreaded>();
 }
 
+const std::string &PsSimpleSingleThreaded::getName() const
+{
+    return _name;
+}
+
 } // namespace algo

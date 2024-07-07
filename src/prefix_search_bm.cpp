@@ -1,32 +1,57 @@
-#include "PrefixSearch.h"
+#include "algorithm/PrefixSearchAsync.h"
 #include "algorithm/PsSimpleSingleThreaded.h"
 #include "helper.h"
 
 #include <algorithm>
 #include <benchmark/benchmark.h>
+#include <iostream>
 #include <random>
 #include <ranges>
 
 using namespace algo;
 
-void prefix_search_bm(benchmark::State &state)
+void prefix_search_single_threaded_bm(benchmark::State &state)
 {
     auto wl = generateSampleWordList();
     shuffleWordList(wl);
     auto n = state.range(0);
     auto sampleWl = getFirstNWords(wl, n);
-    auto ps = PrefixSearch(std::make_unique<PsSimpleSingleThreaded>());
+    auto algo = std::make_unique<PsSimpleSingleThreaded>();
 
     for (auto _ : state) {
-        benchmark::DoNotOptimize(ps.search(sampleWl, "ABCD"));
+        benchmark::DoNotOptimize(algo->search(sampleWl, "ABCD"));
     }
 
     state.SetComplexityN(n);
 }
 
-BENCHMARK(prefix_search_bm)
+void prefix_search_async_bm(benchmark::State &state)
+{
+    size_t cores = std::thread::hardware_concurrency();
+
+    auto wl = generateSampleWordList();
+    shuffleWordList(wl);
+    auto n = state.range(0);
+    auto sampleWl = getFirstNWords(wl, n);
+
+    auto algo = std::make_unique<PrefixSearchAsync>(
+        std::make_unique<PsSimpleSingleThreaded>(), cores);
+
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(algo->search(sampleWl, "ABCD"));
+    }
+
+    state.SetComplexityN(n);
+}
+
+BENCHMARK(prefix_search_single_threaded_bm)
     ->RangeMultiplier(10)
-    ->Range(10, 400000)
+    ->Range(100, 400000)
+    ->Complexity();
+
+BENCHMARK(prefix_search_async_bm)
+    ->RangeMultiplier(10)
+    ->Range(100, 400000)
     ->Complexity();
 
 BENCHMARK_MAIN();
