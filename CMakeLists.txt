@@ -29,6 +29,7 @@ add_executable(
   src/prefix_search_utest.cpp
   src/WordListSlicer_utest.cpp
   src/PrefixSearch.cpp
+  src/WordListSlicer.cpp
   src/algorithm/PsSimpleSingleThreaded.cpp
 )
 target_link_libraries(
