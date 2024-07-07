@@ -25,16 +25,39 @@ FetchContent_MakeAvailable(benchmark)
 enable_testing()
 
 add_executable(
-  prefix_search_test
-  src/prefix_search_test.cpp
+  prefix_search_utest
+  src/prefix_search_utest.cpp
   src/PrefixSearch.cpp
   src/algorithm/PsSimpleSingleThreaded.cpp
 )
 target_link_libraries(
-  prefix_search_test
+  prefix_search_utest
   GTest::gtest_main
   GTest::gmock_main
 )
 
 include(GoogleTest)
-gtest_discover_tests(prefix_search_test)
+gtest_discover_tests(prefix_search_utest)
+
+
+add_executable(
+  prefix_search_bm
+  src/prefix_search_bm.cpp
+  src/PrefixSearch.cpp
+  src/helper.cpp
+  src/algorithm/PsSimpleSingleThreaded.cpp
+)
+
+target_link_libraries(
+  prefix_search_bm
+  benchmark::benchmark
+)
+
+add_executable(
+  prefix_search_e2e
+  src/prefix_search_e2e.cpp
+  src/PrefixSearch.cpp
+  src/helper.cpp
+  src/algorithm/PsSimpleSingleThreaded.cpp
+)
+
