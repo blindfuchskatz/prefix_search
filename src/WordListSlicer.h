@@ -5,5 +5,5 @@
 class WordListSlicer
 {
 public:
-    std::vector<WordList> slice(WordList &wl, size_t slices) const;
+    std::vector<WordList> slice(const WordList &wl, size_t slices) const;
 };

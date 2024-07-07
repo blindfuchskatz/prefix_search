@@ -1,6 +1,7 @@
 #include "WordListSlicer.h"
 
-std::vector<WordList> WordListSlicer::slice(WordList &wl, size_t slices) const
+std::vector<WordList> WordListSlicer::slice(const WordList &wl,
+                                            size_t slices) const
 {
 
     if (wl.empty() || slices == 0 || slices > wl.size()) {

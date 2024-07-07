@@ -23,4 +23,9 @@ WordList PsSimpleSingleThreaded::search(const WordList &wordList,
     return findings;
 }
 
+std::unique_ptr<PrefixSearchAlgorithm> PsSimpleSingleThreaded::clone() const
+{
+    return std::make_unique<PsSimpleSingleThreaded>();
+}
+
 } // namespace algo
