@@ -27,6 +27,7 @@ enable_testing()
 add_executable(
   prefix_search_utest
   src/prefix_search_utest.cpp
+  src/WordListSlicer_utest.cpp
   src/PrefixSearch.cpp
   src/algorithm/PsSimpleSingleThreaded.cpp
 )
