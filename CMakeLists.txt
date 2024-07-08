@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -I${CMAKE_SOURCE_DIR}/src")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wpedantic -I${CMAKE_SOURCE_DIR}/src")
-
 include(FetchContent)
 
 FetchContent_Declare(
@@ -24,51 +23,42 @@ FetchContent_MakeAvailable(benchmark)
 
 enable_testing()
 
-add_executable(
-  prefix_search_utest
-  src/prefix_search_utest.cpp
-  src/WordListSlicer_utest.cpp
+set(COMMON_SOURCES
   src/WordListSlicer.cpp
   src/algorithm/PsSimpleSingleThreaded.cpp
   src/algorithm/PrefixSearchAsync.cpp
-  src/algorithm/PrefixSearchAsync_utest.cpp
   src/algorithm/BinarySearch.cpp
   src/algorithm/ChatGptPrefixSearch.cpp
 )
-target_link_libraries(
-  prefix_search_utest
-  GTest::gtest_main
-  GTest::gmock_main
+
+set(TEST_SOURCES
+  src/prefix_search_utest.cpp
+  src/WordListSlicer_utest.cpp
+  src/utest_helper.cpp
+  src/algorithm/PrefixSearchAsync_utest.cpp
 )
+
+set(BM_SOURCES
+  src/prefix_search_bm.cpp
+  src/helper.cpp
+)
+
+set(E2E_SOURCES
+  src/prefix_search_e2e.cpp
+  src/helper.cpp
+)
+
+# Add the test executable
+add_executable(prefix_search_utest ${TEST_SOURCES} ${COMMON_SOURCES})
+target_link_libraries(prefix_search_utest GTest::gtest_main GTest::gmock_main)
 
 include(GoogleTest)
 gtest_discover_tests(prefix_search_utest)
 
+# Add the benchmark executable
+add_executable(prefix_search_bm ${BM_SOURCES} ${COMMON_SOURCES})
+target_link_libraries(prefix_search_bm benchmark::benchmark)
 
-add_executable(
-  prefix_search_bm
-  src/prefix_search_bm.cpp
-  src/helper.cpp
-  src/WordListSlicer.cpp
-  src/algorithm/PsSimpleSingleThreaded.cpp
-  src/algorithm/PrefixSearchAsync.cpp
-  src/algorithm/BinarySearch.cpp
-  src/algorithm/ChatGptPrefixSearch.cpp
-)
-
-target_link_libraries(
-  prefix_search_bm
-  benchmark::benchmark
-)
-
-add_executable(
-  prefix_search_e2e
-  src/prefix_search_e2e.cpp
-  src/helper.cpp
-  src/WordListSlicer.cpp
-  src/algorithm/PsSimpleSingleThreaded.cpp
-  src/algorithm/PrefixSearchAsync.cpp
-  src/algorithm/BinarySearch.cpp
-  src/algorithm/ChatGptPrefixSearch.cpp
-)
+# Add the end-to-end executable
+add_executable(prefix_search_e2e ${E2E_SOURCES} ${COMMON_SOURCES})
 
