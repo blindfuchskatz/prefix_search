@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <thread>
 
 namespace algo
 {
@@ -11,28 +12,29 @@ namespace algo
 PrefixSearchAsync::PrefixSearchAsync(
     std::unique_ptr<PrefixSearchAlgorithm> algo,
     size_t cores)
-    : _algo(std::move(algo)), _cores(cores){};
+    : _algo(std::move(algo)), _cores(cores)
+{
+}
 
 WordList PrefixSearchAsync::search(const WordList &wordList,
-                                   std::string_view prefix)
+                                   std::string_view prefix) const
 {
     if (_cores > wordList.size() || _cores == 0 || _cores > 128) {
-        // todo PWA: introduce abstract logger -> no std::out during unit
-        // tests
+        // todo PWA: add logger
         std::cout << "Warning: Either number of cores are invalid (" << _cores
-                  << "),or word list size to short (" << wordList.size()
+                  << "), or word list size too short (" << wordList.size()
                   << "). Continue single threaded! " << std::endl;
         return _algo->search(wordList, prefix);
     }
 
     auto wls = WordListSlicer();
-    std::vector<std::future<WordList>> futures;
     auto slices = wls.slice(wordList, _cores);
+    std::vector<WordList> findings(slices.size());
 
-    _startSearchAsync(slices, futures, prefix);
+    _startSearchAsync(slices, findings, prefix);
 
-    return _getFindings(futures);
-};
+    return _getFindings(findings);
+}
 
 std::unique_ptr<PrefixSearchAlgorithm> PrefixSearchAsync::clone() const
 {
@@ -44,27 +46,28 @@ const std::string &PrefixSearchAsync::getName() const
     return _name;
 }
 
-void PrefixSearchAsync::_startSearchAsync(
-    const std::vector<WordList> &slices,
-    std::vector<std::future<WordList>> &futures,
-    std::string_view prefix) const
+void PrefixSearchAsync::_startSearchAsync(const std::vector<WordList> &slices,
+                                          std::vector<WordList> &findings,
+                                          std::string_view prefix) const
 {
-    for (const auto &s : slices) {
+    std::vector<std::jthread> threads;
+
+    for (size_t i = 0; i < slices.size(); ++i) {
         auto algo_clone = _algo->clone();
-        futures.push_back(
-            std::async(std::launch::async,
-                       [algorithm = std::move(algo_clone), s, prefix]() {
-                           return algorithm->search(s, prefix);
-                       }));
+        threads.emplace_back(
+            [&findings,
+             i,
+             algorithm = std::move(algo_clone),
+             slice = slices[i],
+             prefix]() { findings[i] = algorithm->search(slice, prefix); });
     }
 }
 
-WordList PrefixSearchAsync::_getFindings(
-    std::vector<std::future<WordList>> &futures) const
+WordList
+PrefixSearchAsync::_getFindings(const std::vector<WordList> &results) const
 {
     WordList findings;
-    for (auto &future : futures) {
-        WordList partialFindings = future.get();
+    for (const auto &partialFindings : results) {
         findings.insert(
             findings.end(), partialFindings.begin(), partialFindings.end());
     }

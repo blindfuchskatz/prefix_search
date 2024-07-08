@@ -1,7 +1,6 @@
 #include "algorithm/ChatGptPrefixSearch.h"
 
 #include <algorithm>
-#include <iostream>
 #include <mutex>
 #include <string>
 #include <string_view>
@@ -16,32 +15,25 @@ ChatGptPrefixSearch::ChatGptPrefixSearch() = default;
 ChatGptPrefixSearch::~ChatGptPrefixSearch() = default;
 
 WordList ChatGptPrefixSearch::search(const WordList &wordList,
-                                     std::string_view prefix)
+                                     std::string_view prefix) const
 {
-    WordList result;
-    // Mutex for thread-safe access to the result list
-    std::mutex resultMutex;
-
-    // Determine the number of threads to use
+    WordList findings;
+    std::mutex mutex;
     const unsigned int numThreads = std::thread::hardware_concurrency();
     const size_t chunkSize = wordList.size() / numThreads;
 
-    // Worker function to search in a chunk of the word list
-    auto searchChunk = [&wordList, &prefix, &resultMutex, &result](size_t start,
-                                                                   size_t end) {
-        WordList localResult;
+    auto searchChunk = [&wordList, &prefix, &mutex, &findings](size_t start,
+                                                               size_t end) {
+        WordList tmpWl;
         for (size_t i = start; i < end; ++i) {
-            if (std::string_view(wordList[i]).substr(0, prefix.size()) ==
-                prefix) {
-                localResult.push_back(wordList[i]);
+            if (wordList[i].starts_with(prefix)) {
+                tmpWl.emplace_back(wordList[i]);
             }
         }
-        // Lock the mutex and add the local results to the global result list
-        std::lock_guard lock(resultMutex);
-        result.insert(result.end(), localResult.begin(), localResult.end());
+        std::lock_guard lock(mutex);
+        findings.insert(findings.end(), tmpWl.begin(), tmpWl.end());
     };
 
-    // Create and launch threads
     std::vector<std::jthread> threads;
     for (unsigned int i = 0; i < numThreads; ++i) {
         size_t start = i * chunkSize;
@@ -50,12 +42,9 @@ WordList ChatGptPrefixSearch::search(const WordList &wordList,
         threads.emplace_back(searchChunk, start, end);
     }
 
-    // Wait for all threads to complete
-    for (auto &thread : threads) {
-        thread.join();
-    }
+    std::ranges::sort(findings);
 
-    return result;
+    return findings;
 }
 
 std::unique_ptr<PrefixSearchAlgorithm> ChatGptPrefixSearch::clone() const

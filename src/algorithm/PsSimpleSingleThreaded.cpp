@@ -10,7 +10,7 @@ PsSimpleSingleThreaded::PsSimpleSingleThreaded() = default;
 PsSimpleSingleThreaded::~PsSimpleSingleThreaded() = default;
 
 WordList PsSimpleSingleThreaded::search(const WordList &wordList,
-                                        std::string_view prefix)
+                                        std::string_view prefix) const
 {
     WordList findings;
     for (const auto &word : wordList) {

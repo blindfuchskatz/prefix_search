@@ -3,6 +3,7 @@
 #include "algorithm/ChatGptPrefixSearch.h"
 #include "algorithm/PrefixSearchAsync.h"
 #include "algorithm/PsSimpleSingleThreaded.h"
+#include "utest_helper.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -23,11 +24,6 @@ protected:
 
         _algoList.emplace_back(std::make_unique<BinarySearch>());
         _algoList.emplace_back(std::make_unique<ChatGptPrefixSearch>());
-    }
-    void ASSERT_WL_EQ(const WordList &expected, const WordList &actual) const
-    {
-        ASSERT_EQ(expected.size(), actual.size());
-        ASSERT_THAT(expected, actual);
     }
 
     std::vector<std::unique_ptr<PrefixSearchAlgorithm>> _algoList;

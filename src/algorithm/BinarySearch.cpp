@@ -10,7 +10,8 @@ BinarySearch::BinarySearch() = default;
 
 BinarySearch::~BinarySearch() = default;
 
-WordList BinarySearch::search(const WordList &wordList, std::string_view prefix)
+WordList BinarySearch::search(const WordList &wordList,
+                              std::string_view prefix) const
 {
     WordList findings;
 
@@ -48,7 +49,7 @@ size_t BinarySearch::_findPrefixStart(const std::vector<std::string> &words,
     size_t high = words.size();
 
     while (low < high) {
-        int mid = std::midpoint(low, high);
+        size_t mid = std::midpoint(low, high);
         if (words[mid].compare(0, prefix.size(), prefix) < 0) {
             low = mid + 1;
         }

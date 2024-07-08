@@ -1,4 +1,5 @@
 #include "algorithm/PrefixSearchAsync.h"
+#include "utest_helper.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -9,7 +10,8 @@ using namespace std;
 class StubAlgorithm : public algo::PrefixSearchAlgorithm
 {
 public:
-    WordList search(const WordList &wordList, std::string_view prefix) override
+    WordList search(const WordList &wordList,
+                    std::string_view prefix) const override
     {
         auto p = std::string(prefix);
         return {wordList[0] + p};
@@ -31,13 +33,6 @@ private:
 
 class APrefixSearchAsync : public Test
 {
-protected:
-    // todo PWA: duplicated code
-    void ASSERT_WL_EQ(const WordList &expected, const WordList &actual) const
-    {
-        ASSERT_EQ(expected.size(), actual.size());
-        ASSERT_THAT(expected, actual);
-    }
 };
 
 TEST_F(APrefixSearchAsync, assignWordListSlicesToEachRealCoreAndFetchResults)
