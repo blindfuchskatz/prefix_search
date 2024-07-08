@@ -11,6 +11,31 @@
 
 using namespace algo;
 
+void test_find_one_word(const PrefixSearchAlgorithm &a, const WordList &wl)
+{
+    ScopedTimer timer(a.getName().c_str());
+    auto findings = a.search(wl, "ABCD");
+
+    assert(findings.size() == 1);
+    assert(findings[0] == "ABCD");
+}
+
+void test_find_no_word(PrefixSearchAlgorithm const &a, const WordList &wl)
+{
+    auto findings = a.search(wl, "abcd");
+    assert(findings.size() == 0);
+
+    findings = a.search(wl, "ABCDE");
+    assert(findings.size() == 0);
+}
+
+void test_find_multiple_words(PrefixSearchAlgorithm const &a,
+                              const WordList &wl)
+{
+    auto findings = a.search(wl, "ABC");
+    assert(findings.size() == 26);
+}
+
 int main()
 {
     size_t cores = std::thread::hardware_concurrency();
@@ -32,13 +57,9 @@ int main()
 
     printFirstAndLastNElements(wl, 5);
 
-    printFirstAndLastNElements(wl, 5);
-
     for (const auto &a : algoList) {
-        ScopedTimer timer(a->getName().c_str());
-        auto findings = a->search(wl, "ABCD");
-
-        assert(findings.size() == 1);
-        assert(findings[0] == "ABCD");
+        test_find_one_word(*a, wl);
+        test_find_no_word(*a, wl);
+        test_find_multiple_words(*a, wl);
     }
 }
