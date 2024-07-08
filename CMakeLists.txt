@@ -29,6 +29,7 @@ set(COMMON_SOURCES
   src/algorithm/PrefixSearchAsync.cpp
   src/algorithm/BinarySearch.cpp
   src/algorithm/ChatGptPrefixSearch.cpp
+  src/PrefixSearchRegistry.cpp
 )
 
 set(TEST_SOURCES

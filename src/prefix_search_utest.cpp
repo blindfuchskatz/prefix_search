@@ -1,4 +1,5 @@
 #include "PrefixSearchAlgorithm.h"
+#include "PrefixSearchRegistry.h"
 #include "algorithm/BinarySearch.h"
 #include "algorithm/ChatGptPrefixSearch.h"
 #include "algorithm/PrefixSearchAsync.h"
@@ -12,27 +13,18 @@ using namespace testing;
 using namespace std;
 using namespace algo;
 
+const size_t NUMBER_OF_CORES = 16;
+
 class APrefixSearch : public Test
 {
 protected:
-    void SetUp() override
-    {
-        _algoList.clear();
-        _algoList.emplace_back(std::make_unique<PsSimpleSingleThreaded>());
-        _algoList.emplace_back(std::make_unique<PrefixSearchAsync>(
-            std::make_unique<PsSimpleSingleThreaded>(), 16));
-
-        _algoList.emplace_back(std::make_unique<BinarySearch>());
-        _algoList.emplace_back(std::make_unique<ChatGptPrefixSearch>());
-    }
-
-    std::vector<std::unique_ptr<PrefixSearchAlgorithm>> _algoList;
+    PrefixSearchRegistry _psr = PrefixSearchRegistry(NUMBER_OF_CORES);
 };
 
 TEST_F(APrefixSearch, returnsWordWhichMatchPrefixOfAOneWordList)
 {
 
-    for (const auto &a : _algoList) {
+    for (const auto &a : _psr.getAlgorithm()) {
         ASSERT_WL_EQ({}, a->search({}, "ab"));
         ASSERT_WL_EQ({"ab"}, a->search({"ab"}, "ab"));
         ASSERT_WL_EQ({}, a->search({"ab"}, "bc"));
@@ -49,7 +41,7 @@ TEST_F(APrefixSearch, returnsAllMatchingPrefixes)
                    "aaaq", "aaar", "aaas", "aaat", "aaav", "aaaw", "aaax",
                    "aaay", "aaaz", "xxag", "xxan", "xxau"};
 
-    for (const auto &a : _algoList) {
+    for (const auto &a : _psr.getAlgorithm()) {
         ASSERT_WL_EQ({"xxag", "xxan", "xxau"}, a->search(wl, "xx"));
     }
 }

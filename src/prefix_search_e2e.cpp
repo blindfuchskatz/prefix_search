@@ -1,3 +1,4 @@
+#include "PrefixSearchRegistry.h"
 #include "ScopedTimer.h"
 #include "algorithm/BinarySearch.h"
 #include "algorithm/ChatGptPrefixSearch.h"
@@ -39,25 +40,17 @@ void test_find_multiple_words(PrefixSearchAlgorithm const &a,
 int main()
 {
     size_t cores = std::thread::hardware_concurrency();
+    auto psr = PrefixSearchRegistry(cores);
 
     std::cout << std::endl << "\033[1;32m";
     std::cout << "Running prefix search on " << cores << " cores" << std::endl;
     std::cout << "\033[0m";
 
-    std::vector<std::unique_ptr<PrefixSearchAlgorithm>> algoList;
-
-    algoList.emplace_back(std::make_unique<PsSimpleSingleThreaded>());
-    algoList.emplace_back(std::make_unique<PrefixSearchAsync>(
-        std::make_unique<PsSimpleSingleThreaded>(), cores));
-
-    algoList.emplace_back(std::make_unique<BinarySearch>());
-    algoList.emplace_back(std::make_unique<ChatGptPrefixSearch>());
-
     auto wl = generateSampleWordList();
 
     printFirstAndLastNElements(wl, 5);
 
-    for (const auto &a : algoList) {
+    for (const auto &a : psr.getAlgorithm()) {
         test_find_one_word(*a, wl);
         test_find_no_word(*a, wl);
         test_find_multiple_words(*a, wl);
