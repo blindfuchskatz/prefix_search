@@ -24,12 +24,13 @@ FetchContent_MakeAvailable(benchmark)
 enable_testing()
 
 set(COMMON_SOURCES
+  src/PrefixSearchRegistry.cpp
   src/WordListSlicer.cpp
   src/algorithm/PsSimpleSingleThreaded.cpp
   src/algorithm/PrefixSearchAsync.cpp
   src/algorithm/BinarySearch.cpp
   src/algorithm/ChatGptPrefixSearch.cpp
-  src/PrefixSearchRegistry.cpp
+  src/logger/StdOutLogger.cpp
 )
 
 set(TEST_SOURCES

@@ -1,4 +1,5 @@
 #pragma once
+#include "Logger.h"
 #include "PrefixSearchAlgorithm.h"
 
 #include <future>
@@ -10,7 +11,8 @@ class PrefixSearchAsync : public PrefixSearchAlgorithm
 {
 public:
     PrefixSearchAsync(std::unique_ptr<PrefixSearchAlgorithm> algo,
-                      size_t cores);
+                      size_t cores,
+                      std::unique_ptr<logger::Logger> logger);
 
     WordList search(const WordList &wordList,
                     std::string_view prefix) const override;
@@ -25,6 +27,8 @@ private:
 
     std::unique_ptr<PrefixSearchAlgorithm> _algo;
     size_t _cores;
+
+    std::unique_ptr<logger::Logger> _logger;
     std::string _name = "PrefixSearchAsync";
 };
 

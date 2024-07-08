@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Logger.h"
 #include "PrefixSearchAlgorithm.h"
 
 #include <memory>
@@ -8,7 +9,8 @@
 class PrefixSearchRegistry
 {
 public:
-    explicit PrefixSearchRegistry(size_t cores);
+    explicit PrefixSearchRegistry(size_t cores,
+                                  std::unique_ptr<logger::Logger> logger);
 
     const std::vector<std::unique_ptr<algo::PrefixSearchAlgorithm>> &
     getAlgorithm() const;

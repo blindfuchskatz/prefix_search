@@ -5,6 +5,7 @@
 #include "algorithm/PrefixSearchAsync.h"
 #include "algorithm/PsSimpleSingleThreaded.h"
 #include "helper.h"
+#include "logger/StdOutLogger.h"
 
 #include <cassert>
 #include <iostream>
@@ -40,7 +41,8 @@ void test_find_multiple_words(PrefixSearchAlgorithm const &a,
 int main()
 {
     size_t cores = std::thread::hardware_concurrency();
-    auto psr = PrefixSearchRegistry(cores);
+    auto psr =
+        PrefixSearchRegistry(cores, std::make_unique<logger::StdOutLogger>());
 
     std::cout << std::endl << "\033[1;32m";
     std::cout << "Running prefix search on " << cores << " cores" << std::endl;

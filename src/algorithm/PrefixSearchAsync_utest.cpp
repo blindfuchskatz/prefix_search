@@ -37,7 +37,8 @@ class APrefixSearchAsync : public Test
 
 TEST_F(APrefixSearchAsync, assignWordListSlicesToEachRealCoreAndFetchResults)
 {
-    auto psa = algo::PrefixSearchAsync(std::make_unique<StubAlgorithm>(), 4);
+    auto psa = algo::PrefixSearchAsync(
+        std::make_unique<StubAlgorithm>(), 4, std::make_unique<StubLogger>());
 
     auto findings = psa.search({"a", "b", "c", "d", "e", "f"}, "abc");
 
@@ -46,7 +47,8 @@ TEST_F(APrefixSearchAsync, assignWordListSlicesToEachRealCoreAndFetchResults)
 
 TEST_F(APrefixSearchAsync, processAlgorithmSingleWhenWordListToShort)
 {
-    auto psa = algo::PrefixSearchAsync(std::make_unique<StubAlgorithm>(), 7);
+    auto psa = algo::PrefixSearchAsync(
+        std::make_unique<StubAlgorithm>(), 7, std::make_unique<StubLogger>());
 
     auto findings = psa.search({"a", "b", "c", "d", "e", "f"}, "abc");
 
@@ -55,7 +57,8 @@ TEST_F(APrefixSearchAsync, processAlgorithmSingleWhenWordListToShort)
 
 TEST_F(APrefixSearchAsync, processAlgorithmSingleWhenNumberOfCoreTooLittle)
 {
-    auto psa = algo::PrefixSearchAsync(std::make_unique<StubAlgorithm>(), 7);
+    auto psa = algo::PrefixSearchAsync(
+        std::make_unique<StubAlgorithm>(), 7, std::make_unique<StubLogger>());
 
     auto findings = psa.search({"a", "b", "c", "d", "e", "f"}, "abc");
 
@@ -64,7 +67,8 @@ TEST_F(APrefixSearchAsync, processAlgorithmSingleWhenNumberOfCoreTooLittle)
 
 TEST_F(APrefixSearchAsync, processAlgorithmSingleWhenNumberOfCoreTooMuch)
 {
-    auto psa = algo::PrefixSearchAsync(std::make_unique<StubAlgorithm>(), 129);
+    auto psa = algo::PrefixSearchAsync(
+        std::make_unique<StubAlgorithm>(), 129, std::make_unique<StubLogger>());
 
     auto findings = psa.search({"a", "b", "c", "d", "e", "f"}, "abc");
 

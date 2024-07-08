@@ -5,12 +5,16 @@
 #include "algorithm/PrefixSearchAsync.h"
 #include "algorithm/PsSimpleSingleThreaded.h"
 
-PrefixSearchRegistry::PrefixSearchRegistry(size_t cores)
+PrefixSearchRegistry::PrefixSearchRegistry(
+    size_t cores,
+    std::unique_ptr<logger::Logger> logger)
 {
     _algoList.emplace_back(std::make_unique<algo::PsSimpleSingleThreaded>());
 
     _algoList.emplace_back(std::make_unique<algo::PrefixSearchAsync>(
-        std::make_unique<algo::PsSimpleSingleThreaded>(), cores));
+        std::make_unique<algo::PsSimpleSingleThreaded>(),
+        cores,
+        std::move(logger)));
 
     _algoList.emplace_back(std::make_unique<algo::BinarySearch>());
 

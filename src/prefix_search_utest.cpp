@@ -18,7 +18,8 @@ const size_t NUMBER_OF_CORES = 16;
 class APrefixSearch : public Test
 {
 protected:
-    PrefixSearchRegistry _psr = PrefixSearchRegistry(NUMBER_OF_CORES);
+    PrefixSearchRegistry _psr =
+        PrefixSearchRegistry(NUMBER_OF_CORES, std::make_unique<StubLogger>());
 };
 
 TEST_F(APrefixSearch, returnsWordWhichMatchPrefixOfAOneWordList)

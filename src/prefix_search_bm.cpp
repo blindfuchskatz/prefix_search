@@ -3,6 +3,7 @@
 #include "algorithm/PrefixSearchAsync.h"
 #include "algorithm/PsSimpleSingleThreaded.h"
 #include "helper.h"
+#include "logger/StdOutLogger.h"
 
 #include <algorithm>
 #include <benchmark/benchmark.h>
@@ -36,7 +37,9 @@ void prefix_search_async_bm(benchmark::State &state)
     size_t cores = std::thread::hardware_concurrency();
     auto wl = getSampleWordList(state);
     auto algo = std::make_unique<PrefixSearchAsync>(
-        std::make_unique<PsSimpleSingleThreaded>(), cores);
+        std::make_unique<PsSimpleSingleThreaded>(),
+        cores,
+        std::make_unique<logger::StdOutLogger>());
 
     for (auto _ : state) {
         benchmark::DoNotOptimize(algo->search(wl, "ABCD"));

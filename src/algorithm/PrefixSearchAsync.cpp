@@ -3,6 +3,7 @@
 #include "WordListSlicer.h"
 
 #include <algorithm>
+#include <format>
 #include <iostream>
 #include <thread>
 
@@ -11,8 +12,9 @@ namespace algo
 
 PrefixSearchAsync::PrefixSearchAsync(
     std::unique_ptr<PrefixSearchAlgorithm> algo,
-    size_t cores)
-    : _algo(std::move(algo)), _cores(cores)
+    size_t cores,
+    std::unique_ptr<logger::Logger> logger)
+    : _algo(std::move(algo)), _cores(cores), _logger(std::move(logger))
 {
 }
 
@@ -20,10 +22,13 @@ WordList PrefixSearchAsync::search(const WordList &wordList,
                                    std::string_view prefix) const
 {
     if (_cores > wordList.size() || _cores == 0 || _cores > 128) {
-        // todo PWA: add logger
-        std::cout << "Warning: Either number of cores are invalid (" << _cores
-                  << "), or word list size too short (" << wordList.size()
-                  << "). Continue single threaded! " << std::endl;
+
+        _logger->log(std::format(
+            "Warning: Either number of cores are invalid ({}), or word "
+            "list size too short ({}), Continue single threaded!",
+            _cores,
+            wordList.size()));
+
         return _algo->search(wordList, prefix);
     }
 
@@ -38,7 +43,8 @@ WordList PrefixSearchAsync::search(const WordList &wordList,
 
 std::unique_ptr<PrefixSearchAlgorithm> PrefixSearchAsync::clone() const
 {
-    return std::make_unique<PrefixSearchAsync>(_algo->clone(), _cores);
+    return std::make_unique<PrefixSearchAsync>(
+        _algo->clone(), _cores, _logger->clone());
 }
 
 const std::string &PrefixSearchAsync::getName() const
