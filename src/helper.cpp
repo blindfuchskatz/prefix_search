@@ -3,16 +3,15 @@
 #include <algorithm>
 #include <iostream>
 #include <random>
-#include <ranges>
 
 WordList generateSampleWordList()
 {
     WordList wl;
 
-    for (char a = 'A'; a <= 'Z'; ++a) {
-        for (char b = 'A'; b <= 'Z'; ++b) {
-            for (char c = 'A'; c <= 'Z'; ++c) {
-                for (char d = 'A'; d <= 'Z'; ++d) {
+    for (char a = '0'; a <= 'z'; ++a) {
+        for (char b = '0'; b <= 'z'; ++b) {
+            for (char c = '0'; c <= 'z'; ++c) {
+                for (char d = '0'; d <= 'z'; ++d) {
                     std::string word = {a, b, c, d};
                     wl.emplace_back(word);
                 }
