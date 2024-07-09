@@ -26,14 +26,14 @@ The project uses CMake for building the executables. The following command build
 
 During the execution of the e2e tests the run time for each implemented algorithm is measure and printed into std::out for comparison purpose.
 
-## Adding new algorithms for investigations
+## Adding new Algorithms for Investigations
 
 The project have a plug in structure.
-All current investigated are implemented in the [algorithm](./src/algorithm) directory.
+All current investigated algorithm are implemented in the [algorithm](./src/algorithm) directory.
 
 If you want to add a new algorithm just place your source and header next to the existing ones. The new algorithm must derive from the interface class [PrefixSearchAlgorithm](./src/PrefixSearchAlgorithm.h).
 
-After storing the new algorithm source and header file append the source file name at the end of the following [CMakeLists](./CMakeLists.txt) section.
+After storing the new algorithm source and header file, append the source file name at the end of the following [CMakeLists](./CMakeLists.txt) section.
 
         set(COMMON_SOURCESset(COMMON_SOURCES
             SomeAlgorithmSourceFiles.cpp
@@ -44,7 +44,7 @@ Finally you have to add your new algorithm analog to the existing ones to the [P
 
 ## Run google Benchmark Framework
 
-In addition to the simple performance measurement during executing the e2e tests, there is the opportunity to run a more sophisticated performance measurement with the google benchmark framework.
+In addition to basic performance measurement during the execution of e2e tests, there is an opportunity to conduct more sophisticated performance analysis using the Google Benchmark framework.
 
 To run the google benchmark framework execute the following command:
 
