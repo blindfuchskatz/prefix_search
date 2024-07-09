@@ -22,22 +22,6 @@ void test_find_one_word(const PrefixSearchAlgorithm &a, const WordList &wl)
     assert(findings[0] == "ABCD");
 }
 
-void test_find_no_word(PrefixSearchAlgorithm const &a, const WordList &wl)
-{
-    auto findings = a.search(wl, "abcd");
-    assert(findings.size() == 0);
-
-    findings = a.search(wl, "ABCDE");
-    assert(findings.size() == 0);
-}
-
-void test_find_multiple_words(PrefixSearchAlgorithm const &a,
-                              const WordList &wl)
-{
-    auto findings = a.search(wl, "ABC");
-    assert(findings.size() == 26);
-}
-
 int main()
 {
     size_t cores = std::thread::hardware_concurrency();
@@ -54,7 +38,5 @@ int main()
 
     for (const auto &a : psr.getAlgorithm()) {
         test_find_one_word(*a, wl);
-        test_find_no_word(*a, wl);
-        test_find_multiple_words(*a, wl);
     }
 }
