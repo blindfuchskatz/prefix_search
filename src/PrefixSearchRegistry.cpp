@@ -2,6 +2,7 @@
 
 #include "algorithm/BinarySearch.h"
 #include "algorithm/ChatGptPrefixSearch.h"
+#include "algorithm/ChatGptPrefixSearch2.h"
 #include "algorithm/PrefixSearchAsync.h"
 #include "algorithm/PsSimpleSingleThreaded.h"
 
@@ -19,6 +20,7 @@ PrefixSearchRegistry::PrefixSearchRegistry(
     _algoList.emplace_back(std::make_unique<algo::BinarySearch>());
 
     _algoList.emplace_back(std::make_unique<algo::ChatGptPrefixSearch>());
+    _algoList.emplace_back(std::make_unique<algo::ChatGptPrefixSearch2>());
 }
 
 const std::vector<std::unique_ptr<algo::PrefixSearchAlgorithm>> &
