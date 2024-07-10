@@ -7,6 +7,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -I${CMAKE_SOURC
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wpedantic -I${CMAKE_SOURCE_DIR}/src")
 include(FetchContent)
 
+
+set(CMAKE_BUILD_TYPE Debug)
+
+
 FetchContent_Declare(
   googletest
   GIT_REPOSITORY https://github.com/google/googletest.git
@@ -30,6 +34,7 @@ set(COMMON_SOURCES
   src/algorithm/PrefixSearchAsync.cpp
   src/algorithm/BinarySearch.cpp
   src/algorithm/ChatGptPrefixSearch.cpp
+  src/algorithm/ChatGptPrefixSearch2.cpp
   src/logger/StdOutLogger.cpp
 )
 
