@@ -5,10 +5,6 @@
 namespace algo
 {
 
-PsSimpleSingleThreaded::PsSimpleSingleThreaded() = default;
-
-PsSimpleSingleThreaded::~PsSimpleSingleThreaded() = default;
-
 WordList PsSimpleSingleThreaded::search(const WordList &wordList,
                                         std::string_view prefix) const
 {

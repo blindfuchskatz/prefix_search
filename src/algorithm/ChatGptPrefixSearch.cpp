@@ -10,10 +10,6 @@
 namespace algo
 {
 
-ChatGptPrefixSearch::ChatGptPrefixSearch() = default;
-
-ChatGptPrefixSearch::~ChatGptPrefixSearch() = default;
-
 WordList ChatGptPrefixSearch::search(const WordList &wordList,
                                      std::string_view prefix) const
 {

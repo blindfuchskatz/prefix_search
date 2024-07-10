@@ -7,8 +7,6 @@ namespace algo
 class PsSimpleSingleThreaded : public PrefixSearchAlgorithm
 {
 public:
-    PsSimpleSingleThreaded();
-    ~PsSimpleSingleThreaded() override;
     WordList search(const WordList &wordList,
                     std::string_view prefix) const override;
     std::unique_ptr<PrefixSearchAlgorithm> clone() const override;

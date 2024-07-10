@@ -7,8 +7,6 @@ namespace algo
 class BinarySearch : public PrefixSearchAlgorithm
 {
 public:
-    BinarySearch();
-    ~BinarySearch() override;
     WordList search(const WordList &wordList,
                     std::string_view prefix) const override;
     std::unique_ptr<PrefixSearchAlgorithm> clone() const override;

@@ -1,25 +1,26 @@
 #include "algorithm/BinarySearch.h"
 
 #include <algorithm>
+#include <execution>
 #include <numeric>
+#include <ranges>
 
 namespace algo
 {
-
-BinarySearch::BinarySearch() = default;
-
-BinarySearch::~BinarySearch() = default;
 
 WordList BinarySearch::search(const WordList &wordList,
                               std::string_view prefix) const
 {
     WordList findings;
+    WordList sortedWordList = wordList;
+    std::sort(
+        std::execution::par, sortedWordList.begin(), sortedWordList.end());
 
-    size_t startIdx = _findPrefixStart(wordList, prefix);
+    size_t startIdx = _findPrefixStart(sortedWordList, prefix);
 
-    for (size_t i = startIdx; i < wordList.size(); ++i) {
-        if (wordList[i].compare(0, prefix.size(), prefix) == 0) {
-            findings.emplace_back(wordList[i]);
+    for (size_t i = startIdx; i < sortedWordList.size(); ++i) {
+        if (sortedWordList[i].compare(0, prefix.size(), prefix) == 0) {
+            findings.emplace_back(sortedWordList[i]);
         }
         else {
             break; // Since the vector is sorted, no need to continue if the
