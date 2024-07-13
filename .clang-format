@@ -1,0 +1,23 @@
+BasedOnStyle: LLVM
+IndentWidth: 4
+AccessModifierOffset: -4
+TabWidth: 4
+ContinuationIndentWidth: 4
+UseTab: Never
+AllowAllParametersOfDeclarationOnNextLine: false
+AlignTrailingComments: true
+IncludeBlocks: Regroup
+AlignOperands: true
+AllowShortFunctionsOnASingleLine: Empty
+BinPackArguments: false
+BinPackParameters: false
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterEnum: true
+  AfterStruct: false
+  AfterClass: true
+  AfterNamespace: true
+  AfterFunction: true
+  AfterControlStatement: false
+  BeforeElse: true
+  BeforeCatch: true
