@@ -11,26 +11,12 @@ namespace algo
 WordList BinarySearch::search(const WordList &wordList,
                               std::string_view prefix) const
 {
-    WordList findings;
-    WordList sortedWordList = wordList;
-    std::sort(
-        std::execution::par, sortedWordList.begin(), sortedWordList.end());
-
-    size_t startIdx = _findPrefixStart(sortedWordList, prefix);
-
-    for (size_t i = startIdx; i < sortedWordList.size(); ++i) {
-        if (sortedWordList[i].compare(0, prefix.size(), prefix) == 0) {
-            findings.emplace_back(sortedWordList[i]);
-        }
-        else {
-            break; // Since the vector is sorted, no need to continue if the
-                   // prefix doesn't match
-        }
+    if (std::ranges::is_sorted(wordList) == false) {
+        WordList copyWordList = wordList;
+        std::ranges::sort(copyWordList);
+        return _search(copyWordList, prefix);
     }
-
-    std::ranges::sort(findings);
-
-    return findings;
+    return _search(wordList, prefix);
 }
 
 std::unique_ptr<PrefixSearchAlgorithm> BinarySearch::clone() const
@@ -41,6 +27,25 @@ std::unique_ptr<PrefixSearchAlgorithm> BinarySearch::clone() const
 const std::string &BinarySearch::getName() const
 {
     return _name;
+}
+
+WordList BinarySearch::_search(const WordList &wordList,
+                               std::string_view prefix) const
+{
+    WordList findings;
+    size_t startIdx = _findPrefixStart(wordList, prefix);
+
+    for (size_t i = startIdx; i < wordList.size(); ++i) {
+        if (wordList[i].compare(0, prefix.size(), prefix) == 0) {
+            findings.emplace_back(wordList[i]);
+        }
+        else {
+            break; // Since the vector is sorted, no need to continue if the
+                   // prefix doesn't match
+        }
+    }
+
+    return findings;
 }
 
 size_t BinarySearch::_findPrefixStart(const std::vector<std::string> &words,
