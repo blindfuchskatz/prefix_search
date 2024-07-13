@@ -47,6 +47,10 @@ WordList ChatGptPrefixSearch2::search(const WordList &wordList,
                              end);
     }
 
+    for (auto &t : threads) {
+        t.join();
+    }
+
     std::ranges::sort(result);
 
     return result;

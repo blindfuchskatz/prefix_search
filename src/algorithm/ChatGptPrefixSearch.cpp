@@ -1,6 +1,7 @@
 #include "algorithm/ChatGptPrefixSearch.h"
 
 #include <algorithm>
+#include <iostream>
 #include <mutex>
 #include <string>
 #include <string_view>
@@ -36,6 +37,10 @@ WordList ChatGptPrefixSearch::search(const WordList &wordList,
         size_t end =
             (i == numThreads - 1) ? wordList.size() : (i + 1) * chunkSize;
         threads.emplace_back(searchChunk, start, end);
+    }
+
+    for (auto &t : threads) {
+        t.join();
     }
 
     std::ranges::sort(findings);
