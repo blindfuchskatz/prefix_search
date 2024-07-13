@@ -16,10 +16,11 @@ using namespace algo;
 void test_find_one_word(const PrefixSearchAlgorithm &a, const WordList &wl)
 {
     ScopedTimer timer(a.getName().c_str());
-    auto findings = a.search(wl, "ABCD");
+    auto findings = a.search(wl, "ABC");
 
-    assert(findings.size() == 1);
-    assert(findings[0] == "ABCD");
+    assert(findings.size() == 26);
+
+    assert(findings[0] == "ABCA");
 }
 
 int main()
